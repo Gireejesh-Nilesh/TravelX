@@ -1,0 +1,74 @@
+<section class="activities">
+  <header class="activities__header">
+    <div>
+      <p class="activities__eyebrow">Activities</p>
+      <h1>Hello {{ userName() }}, ready for your next adventure?</h1>
+      <p class="activities__subtitle">Total places visited: {{ visitedPlaces.length }}</p>
+    </div>
+    <div class="activities__location">
+      <p>
+        Location:
+        <strong>{{ locationLabel() || (locationLoading() ? 'Detecting...' : 'Not set') }}</strong>
+      </p>
+      <div class="activities__location-input">
+        <input #locInput type="text" placeholder="Update location" />
+        <button (click)="updateLocation(locInput.value)">Save</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="activities__tabs">
+    <button type="button" [class.active]="activeTab() === 'visited'" (click)="setTab('visited')">
+      Visited
+    </button>
+    <button
+      type="button"
+      [class.active]="activeTab() === 'recommended'"
+      (click)="setTab('recommended')"
+    >
+      Recommended
+    </button>
+  </div>
+
+  <div class="activities__panel" *ngIf="activeTab() === 'visited'">
+    <div *ngIf="visitedPlaces.length; else noVisits" class="activities__grid">
+      <article class="activities__card" *ngFor="let booking of visitedPlaces">
+        <div class="activities__card-body">
+          <h3>{{ booking.placeName }}</h3>
+          <p>Hotel: {{ booking.hotel }}</p>
+          <p>Members: {{ booking.members }}</p>
+
+          <!-- ✅ NEW FIELD -->
+          <p *ngIf="booking.visitDate">Visit Date: {{ booking.visitDate | date: 'mediumDate' }}</p>
+
+          <p>Reserved: {{ bookingDateLabel(booking) }}</p>
+
+          <span
+            class="activities__tag"
+            [class.activities__tag--visited]="bookingStatusLabel(booking) === 'Visited'"
+          >
+            {{ bookingStatusLabel(booking) }}
+          </span>
+        </div>
+      </article>
+    </div>
+    <ng-template #noVisits>
+      <p class="activities__empty">No trips yet. Book a tour to get started.</p>
+    </ng-template>
+  </div>
+
+  <div class="activities__panel" *ngIf="activeTab() === 'recommended'">
+    <div class="activities__grid">
+      <article class="activities__card" *ngFor="let place of recommendedPlaces">
+        <div class="activities__card-body">
+          <h3>{{ place.name }}</h3>
+          <p>{{ place.country }}</p>
+          <p>{{ place.blurb }}</p>
+          <button class="activities__button" [routerLink]="['/destination', place.id]">
+            Explore
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

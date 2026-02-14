@@ -1,0 +1,90 @@
+<section class="view-all">
+  <header class="view-all__header">
+    <div>
+      <p class="view-all__eyebrow">All Destinations</p>
+      <h1>Every Place We Love Right Now</h1>
+      <p class="view-all__subtitle">
+        Search by name, country, vibe, or tags. Sort and filter to plan faster.
+      </p>
+    </div>
+  </header>
+
+  <div class="view-all__search">
+    <input
+      type="search"
+      placeholder="Search places..."
+      [value]="query()"
+      (input)="updateQuery(($any($event.target)).value)"
+    />
+
+    <button class="view-all__sort" type="button" (click)="toggleSort()">
+      <span>Sort</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M7 4v12m0 0l-3-3m3 3l3-3M17 20V8m0 0l-3 3m3-3l3 3"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+
+    <!-- TYPE FILTER -->
+    <select (change)="setType(($any($event.target)).value)">
+      <option value="">All Types</option>
+      <option *ngFor="let t of types()" [value]="t">
+        {{ t }}
+      </option>
+    </select>
+
+    <!-- POPULARITY FILTER -->
+    <select (change)="setPopularity(($any($event.target)).value)">
+      <option value="">All Popular</option>
+      <option *ngFor="let p of popularities()" [value]="p">
+        {{ p }}
+      </option>
+    </select>
+  </div>
+
+  <div class="view-all__grid">
+    <article
+      class="view-all__card"
+      *ngFor="let place of filteredPlaces(); trackBy: trackById"
+      [attr.data-id]="place.id"
+    >
+      <div class="view-all__image">
+        <img [src]="place.image" [alt]="place.name + ', ' + place.country" />
+      </div>
+
+      <div class="view-all__content">
+        <div class="view-all__meta">
+          <span class="view-all__name">{{ place.name }}</span>
+          <span class="view-all__country">{{ place.country }}</span>
+        </div>
+
+        <!-- NEW TAGS -->
+        <div class="view-all__tags">
+          <span class="tag tag--type">{{ place.type }}</span>
+          <span class="tag tag--popularity">{{ place.popularFor }}</span>
+        </div>
+
+        <p class="view-all__blurb">{{ place.blurb }}</p>
+
+        <div class="view-all__footer">
+          <span class="view-all__distance">
+            {{ place.distanceKm | number: '1.0-0' }} km away
+          </span>
+
+          <button
+            class="view-all__button"
+            [routerLink]="['/destination', place.id]"
+          >
+            Explore
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

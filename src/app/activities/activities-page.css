@@ -1,0 +1,130 @@
+.activities {
+  min-height: 100vh;
+  padding: 7rem 6vw 6rem;
+  background: radial-gradient(circle at top, #0d1422, #0a0f18 60%);
+  color: #eef2ff;
+}
+
+.activities__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.activities__eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.25rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 0.6rem;
+}
+
+.activities__subtitle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.activities__location {
+  padding: 1rem 1.4rem;
+  border-radius: 18px;
+  background: rgba(12, 16, 24, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activities__location-input {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.activities__location-input input {
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(12, 16, 24, 0.8);
+  color: #eef2ff;
+}
+
+.activities__location-input button {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(106, 169, 255, 0.35);
+  background: rgba(106, 169, 255, 0.15);
+  color: #cfe2ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.activities__tabs {
+  display: inline-flex;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+  background: rgba(12, 16, 24, 0.7);
+  padding: 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activities__tabs button {
+  padding: 0.5rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.activities__tabs button.active {
+  background: rgba(106, 169, 255, 0.2);
+  color: #cfe2ff;
+}
+
+.activities__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.4rem;
+}
+
+.activities__card {
+  padding: 1.2rem 1.4rem;
+  border-radius: 20px;
+  background: rgba(12, 16, 24, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activities__card-body h3 {
+  margin: 0 0 0.5rem;
+}
+
+.activities__tag {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(106, 169, 255, 0.2);
+  color: #cfe2ff;
+  font-size: 0.75rem;
+}
+
+.activities__tag--visited {
+  background: rgba(70, 200, 140, 0.2);
+  color: #bdf5dd;
+}
+
+.activities__button {
+  margin-top: 0.8rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(106, 169, 255, 0.4);
+  background: rgba(106, 169, 255, 0.15);
+  color: #cfe2ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.activities__empty {
+  color: rgba(255, 255, 255, 0.7);
+}

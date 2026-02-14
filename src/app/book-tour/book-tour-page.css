@@ -1,0 +1,178 @@
+:root {
+  --navbar-height: 90px;
+}
+
+.book-tour {
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(120deg, rgba(5, 8, 16, 0.95), rgba(10, 14, 22, 0.9));
+  margin-top: var(--navbar-height);
+}
+
+.book-tour__overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  background: rgba(5, 7, 14, 0.6);
+  z-index: 15;
+}
+
+/* Date input calendar icon */
+input[type='date']::-webkit-calendar-picker-indicator {
+  opacity: 0.9;
+  filter: brightness(0) saturate(100%) invert(62%) sepia(83%) saturate(748%) hue-rotate(176deg);
+}
+
+input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.book-tour__panel {
+  width: min(420px, 92vw);
+  background: rgba(10, 14, 22, 0.95);
+  border-radius: 26px;
+  padding: 2.4rem 2.1rem;
+  color: #eef2ff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+
+.book-tour__subtitle {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0.6rem 0 1.4rem;
+}
+
+.book-tour__panel form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.book-tour__panel label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.book-tour__panel select,
+.book-tour__panel input {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(12, 16, 24, 0.9);
+  color: #eef2ff;
+}
+
+.book-tour__hotels {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.book-tour__hotels button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 16, 24, 0.8);
+  color: #eef2ff;
+  cursor: pointer;
+}
+
+.book-tour__hotels button.active {
+  border-color: rgba(106, 169, 255, 0.5);
+  background: rgba(106, 169, 255, 0.15);
+}
+
+.book-tour__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+}
+
+.book-tour__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.book-tour__actions button {
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(106, 169, 255, 0.4);
+  background: rgba(106, 169, 255, 0.2);
+  color: #cfe2ff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.book-tour__back {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.book-tour__actions button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scratch {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 12, 0.7);
+  z-index: 20;
+}
+
+.scratch__card {
+  width: min(360px, 90vw);
+  border-radius: 18px;
+  background: #0c111c;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  color: #eef2ff;
+}
+
+.scratch__cover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, #2b2f3b, #4d5262);
+  animation: scratch-reveal 1.2s ease forwards;
+  z-index: 2;
+}
+
+.scratch__message {
+  padding: 2.2rem 1.8rem;
+  position: relative;
+  z-index: 1;
+}
+
+.scratch__message button {
+  margin-top: 1rem;
+  padding: 0.5rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid rgba(106, 169, 255, 0.4);
+  background: rgba(106, 169, 255, 0.2);
+  color: #cfe2ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes scratch-reveal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

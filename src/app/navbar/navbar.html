@@ -1,0 +1,104 @@
+<nav class="navbar" [class.navbar--compact]="isCompact" [class.navbar--reveal]="isReveal">
+  <div class="navbar-top">
+    <div class="logo">
+      <a routerLink="/" (click)="goHome($event)">TravelX</a>
+    </div>
+    <button
+      class="nav-menu-button"
+      type="button"
+      aria-label="Open navigation menu"
+      *ngIf="isCompact"
+    >
+      <i class="ri-menu-fill"></i>
+    </button>
+
+    <div class="left" *ngIf="!isCompact">
+      <div class="nav-links-wrap" #linksWrap>
+        <ul class="nav-links">
+          <li>
+            <a
+              routerLink="/destinations"
+              (click)="goDestinations($event)"
+              [class.active]="isDestinationsActive"
+              data-link="destinations"
+            >
+              Destinations
+            </a>
+          </li>
+
+          <li>
+            <a
+              routerLink="/activities"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              data-link="activities"
+            >
+              Activities
+            </a>
+          </li>
+
+          <li>
+            <a
+              routerLink="/book-tour"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              data-link="book-tour"
+            >
+              Book a Tour
+            </a>
+          </li>
+        </ul>
+        <span class="nav-underline" aria-hidden="true"></span>
+      </div>
+
+      <div class="buttons">
+        <ng-container *ngIf="user; else authButtons">
+          <div class="user-pill">
+            <span class="user-pill__icon">User</span>
+            <span class="user-pill__name">{{ user.name }}</span>
+          </div>
+        </ng-container>
+        <ng-template #authButtons>
+          <a routerLink="/signin" class="btn signin">Sign In</a>
+          <a routerLink="/signup" class="btn signup">Sign Up</a>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE MENU (BOTTOM ROW) -->
+  <div class="nav-menu" *ngIf="isCompact">
+    <a
+      routerLink="/destinations"
+      (click)="goDestinations($event)"
+      [class.active]="isDestinationsActive"
+    >
+      Destinations
+    </a>
+    <a
+      routerLink="/activities"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Activities
+    </a>
+    <a
+      routerLink="/book-tour"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Book a Tour
+    </a>
+
+    <ng-container *ngIf="user; else authMenu">
+      <div class="nav-profile">
+        <span class="nav-profile__icon">User</span>
+        <span>Profile</span>
+      </div>
+    </ng-container>
+    <ng-template #authMenu>
+      <a routerLink="/signin" class="btn signin">Sign In</a>
+      <a routerLink="/signup" class="btn signup">Sign Up</a>
+    </ng-template>
+  </div>
+</nav>

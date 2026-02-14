@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@300;400;600;700&display=swap"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <title>TravleX</title>
+  </head>
+  <body>
+    <app-root></app-root>
+    <div class="cursor"></div>
+    <div class="particles"></div>
+
+    <script>
+      const cursor = document.querySelector('.cursor');
+
+      document.addEventListener('mousemove', (e) => {
+        const { clientX: x, clientY: y } = e;
+
+        /* Move circle */
+        cursor.style.left = x + 'px';
+        cursor.style.top = y + 'px';
+
+        /* Create particle */
+        createParticle(x, y);
+      });
+
+      function createParticle(x, y) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+
+        /* Slight randomness for star feel */
+        const size = Math.random() * 4 + 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        document.body.appendChild(particle);
+
+        /* Remove after animation */
+        setTimeout(() => {
+          particle.remove();
+        }, 1000);
+      }
+
+      let lastScrollY = window.scrollY;
+
+      window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+
+        const delta = Math.abs(currentScrollY - lastScrollY);
+
+        /* Spawn only if meaningful scroll */
+        if (delta > 5) {
+          createScrollParticles(delta);
+        }
+
+        lastScrollY = currentScrollY;
+      });
+    </script>
+  </body>
+</html>
