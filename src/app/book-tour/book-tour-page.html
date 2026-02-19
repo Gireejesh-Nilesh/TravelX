@@ -58,7 +58,7 @@
         <div class="book-tour__actions">
           <button type="button" class="book-tour__back" (click)="goBack()">Go Back</button>
           <button type="button" [disabled]="!paymentReady()" (click)="startPayment()">
-            Pay Now
+            Book Now
           </button>
         </div>
       </form>
@@ -70,7 +70,7 @@
     <div class="scratch__card">
       <div class="scratch__cover"></div>
       <div class="scratch__message">
-        <h3>Payment Successful</h3>
+        <h3>Booking Successful</h3>
         <p>Your booking has been added to Activities.</p>
         <button type="button" (click)="closeScratch()">Go to Activities</button>
       </div>

@@ -8,6 +8,7 @@ export type Place = {
   name: string;
   country: string;
   distanceKm: number;
+  price: number;
   image: string;
   images: string[];
   blurb: string;
@@ -34,6 +35,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 2000,
     blurb: 'Whitewashed cliffs, cobalt domes, and sunset views.',
     coordinates: { lat: 36.3932, lng: 25.4615 },
 
@@ -69,6 +71,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 7000,
     blurb: 'Temples, bamboo groves, and timeless lantern streets.',
     coordinates: { lat: 35.0116, lng: 135.7681 },
 
@@ -103,6 +106,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 7500,
     blurb: 'Turquoise lakes and alpine peaks in every direction.',
     coordinates: { lat: 51.1784, lng: -115.5708 },
 
@@ -137,6 +141,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1473625247510-8ceb1760943f?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 6000,
     blurb: 'Hot-air balloons over surreal volcanic valleys.',
     coordinates: { lat: 38.6431, lng: 34.8289 },
 
@@ -170,6 +175,7 @@ export const places: Place[] = [
     images: [
       'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 1000,
     blurb: 'Terraced rice fields and tranquil beach temples.',
     coordinates: { lat: -8.3405, lng: 115.092 },
 
@@ -197,7 +203,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1522098543979-ffc7f79d6d36?auto=format&fit=crop&w=1400&q=80',
     ],
-
+    price: 8000,
     blurb: 'Romantic boulevards, art, and timeless architecture.',
     coordinates: { lat: 48.8566, lng: 2.3522 },
 
@@ -236,7 +242,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1521292270410-a8c3a6b6e2f5?auto=format&fit=crop&w=1400&q=80',
     ],
-
+    price: 3000,
     blurb: 'Snow peaks, lakes, and postcard villages.',
     coordinates: { lat: 46.8182, lng: 8.2275 },
 
@@ -275,9 +281,9 @@ export const places: Place[] = [
     images: [
       'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1587922546307-776227941871?auto=format&fit=crop&w=1400&q=80',
-      'https://images.unsplash.com/photo-1496566084516-c5b96fcbd5c8?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+      'https://images.unsplash.com/photo-1496566084516-c5b96fcbd5c8?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     ],
-
+    price: 10000,
     blurb: 'Golden beaches and vibrant nightlife.',
     coordinates: { lat: 15.2993, lng: 74.124 },
 
@@ -316,6 +322,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 9000,
 
     blurb: 'Snowy mountains and adventure escapes.',
     coordinates: { lat: 32.2432, lng: 77.1892 },
@@ -355,6 +362,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 9500,
 
     blurb: 'The Pink City of forts and palaces.',
     coordinates: { lat: 26.9124, lng: 75.7873 },
@@ -393,6 +401,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 8500,
 
     blurb: 'Home of the iconic Taj Mahal.',
     coordinates: { lat: 27.1767, lng: 78.0081 },
@@ -431,7 +440,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1400&q=80',
     ],
-
+    price: 8500,
     blurb: 'Serene canals, houseboats, and palm-lined waters.',
     coordinates: { lat: 9.4981, lng: 76.3388 },
 
@@ -470,6 +479,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1593181629936-11c609b8db9b?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1400&q=80',
     ],
+    price: 9000,
 
     blurb: 'High-altitude deserts and dramatic Himalayan landscapes.',
     coordinates: { lat: 34.1526, lng: 77.577 },
@@ -509,7 +519,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1599661046827-dacde6976549?auto=format&fit=crop&w=1400&q=80',
     ],
-
+    price: 500,
     blurb: 'Ancient ghats and timeless spiritual energy.',
     coordinates: { lat: 25.3176, lng: 82.9739 },
 
@@ -548,7 +558,7 @@ export const places: Place[] = [
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80',
       'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1400&q=80',
     ],
-
+    price: 200,
     blurb: 'Crystal-clear waters and untouched beaches.',
     coordinates: { lat: 11.7401, lng: 92.6586 },
 

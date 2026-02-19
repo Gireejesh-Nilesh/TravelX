@@ -1,4 +1,7 @@
 <section class="view-all">
+  <!-- SORT BUTTON (TOP RIGHT BELOW NAVBAR) -->
+
+  <!-- HEADER -->
   <header class="view-all__header">
     <div>
       <p class="view-all__eyebrow">All Destinations</p>
@@ -9,53 +12,188 @@
     </div>
   </header>
 
-  <div class="view-all__search">
-    <input
-      type="search"
-      placeholder="Search places..."
-      [value]="query()"
-      (input)="updateQuery(($any($event.target)).value)"
-    />
+  <div class="view-all__topbar">
+    <div class="view-all__search">
+      <input
+        type="search"
+        placeholder="Search places..."
+        [value]="query()"
+        (input)="updateQuery($any($event.target).value)"
+      />
+    </div>
 
-    <button class="view-all__sort" type="button" (click)="toggleSort()">
-      <span>Sort</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          d="M7 4v12m0 0l-3-3m3 3l3-3M17 20V8m0 0l-3 3m3-3l3 3"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </button>
+    <div class="sort-panel" (click)="$event.stopPropagation()">
+      <div class="sort-controls">
+        <!-- SORT BUTTON -->
+        <button class="sort-button" type="button" (click)="toggleMenu()">
+          <span>Sort</span>
+          <i class="ri-arrow-down-s-line sort-arrow"></i>
+        </button>
 
-    <!-- TYPE FILTER -->
-    <select (change)="setType(($any($event.target)).value)">
-      <option value="">All Types</option>
-      <option *ngFor="let t of types()" [value]="t">
-        {{ t }}
-      </option>
-    </select>
+        <!-- CLEAR BUTTON -->
+        <button class="sort-clear" type="button" (click)="clearAllFilters()">Clear All</button>
+      </div>
+      <!-- MENU -->
+      <div class="sort-menu" [class.sort-menu--open]="menuOpen()">
+        <!-- DISTANCE -->
+        <div
+          class="sort-item"
+          [class.sort-item--active]="activeChild() === 'distance'"
+          (click)="toggleChild('distance')"
+        >
+          <label class="sort-label">
+            <span>Distance</span>
+          </label>
 
-    <!-- POPULARITY FILTER -->
-    <select (change)="setPopularity(($any($event.target)).value)">
-      <option value="">All Popular</option>
-      <option *ngFor="let p of popularities()" [value]="p">
-        {{ p }}
-      </option>
-    </select>
+          <div
+            class="sort-child"
+            [class.sort-child--open]="activeChild() === 'distance'"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="sort-option" (click)="setDistanceMode('desc')">Longest to Shortest</div>
+
+            <div class="sort-option" (click)="setDistanceMode('asc')">Shortest to Longest</div>
+
+            <div class="sort-option" (click)="isCustomDistanceOpen.set(!isCustomDistanceOpen())">
+              Custom
+            </div>
+
+            <div class="sort-custom-panel" [class.sort-custom-panel--open]="isCustomDistanceOpen()">
+              <label>
+                Min:
+                <input type="number" #minDistance />
+              </label>
+
+              <label>
+                Max:
+                <input type="number" #maxDistance />
+              </label>
+
+              <button
+                type="button"
+                (click)="
+                  setCustomDistance(
+                    minDistance.value ? +minDistance.value : null,
+                    maxDistance.value ? +maxDistance.value : null
+                  )
+                "
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TYPE -->
+        <div
+          class="sort-item"
+          [class.sort-item--active]="activeChild() === 'type'"
+          (click)="toggleChild('type')"
+        >
+          <label class="sort-label">
+            <span>Type</span>
+          </label>
+
+          <div
+            class="sort-child"
+            [class.sort-child--open]="activeChild() === 'type'"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="sort-option" *ngFor="let t of types()" (click)="setType(t)">
+              {{ t }}
+            </div>
+          </div>
+        </div>
+
+        <!-- POPULARITY -->
+        <div
+          class="sort-item"
+          [class.sort-item--active]="activeChild() === 'popularity'"
+          (click)="toggleChild('popularity')"
+        >
+          <label class="sort-label">
+            <span>Popularity</span>
+          </label>
+
+          <div
+            class="sort-child"
+            [class.sort-child--open]="activeChild() === 'popularity'"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="sort-option" (click)="setPopularity('Low')">Low</div>
+            <div class="sort-option" (click)="setPopularity('Medium')">Medium</div>
+            <div class="sort-option" (click)="setPopularity('High')">High</div>
+          </div>
+        </div>
+
+        <!-- PRICE -->
+        <div
+          class="sort-item"
+          [class.sort-item--active]="activeChild() === 'price'"
+          (click)="toggleChild('price')"
+        >
+          <label class="sort-label">
+            <span>Price</span>
+          </label>
+
+          <div
+            class="sort-child sort-child--price"
+            [class.sort-child--open]="activeChild() === 'price'"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="price-slider" #priceSlider>
+              <div class="price-track"></div>
+
+              <div
+                class="price-range"
+                [style.left.%]="priceMinPercent()"
+                [style.right.%]="100 - priceMaxPercent()"
+              ></div>
+
+              <div
+                class="price-tooltip price-tooltip--min"
+                [class.price-tooltip--shift-left]="tooltipOverlap()"
+                [style.left.%]="priceMinPercent()"
+              >
+                ₹{{ priceMin() | number: '1.0-0' }}
+              </div>
+
+              <div
+                class="price-tooltip price-tooltip--max"
+                [class.price-tooltip--shift-right]="tooltipOverlap()"
+                [style.left.%]="priceMaxPercent()"
+              >
+                ₹{{ priceMax() | number: '1.0-0' }}
+              </div>
+
+              <div
+                class="price-thumb price-thumb--min"
+                (mousedown)="startSliderDrag($event, 'min')"
+                [style.left.%]="priceMinPercent()"
+              ></div>
+
+              <div
+                class="price-thumb price-thumb--max"
+                (mousedown)="startSliderDrag($event, 'max')"
+                [style.left.%]="priceMaxPercent()"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- GRID -->
   <div class="view-all__grid">
     <article
       class="view-all__card"
+      #cardEl
+      [attr.data-place-id]="place.id"
       *ngFor="let place of filteredPlaces(); trackBy: trackById"
-      [attr.data-id]="place.id"
     >
       <div class="view-all__image">
-        <img [src]="place.image" [alt]="place.name + ', ' + place.country" />
+        <img [src]="place.image" [alt]="place.name" />
       </div>
 
       <div class="view-all__content">
@@ -64,23 +202,18 @@
           <span class="view-all__country">{{ place.country }}</span>
         </div>
 
-        <!-- NEW TAGS -->
         <div class="view-all__tags">
           <span class="tag tag--type">{{ place.type }}</span>
           <span class="tag tag--popularity">{{ place.popularFor }}</span>
+          <span class="tag tag--type">Rs. {{ place.price }} Only</span>
         </div>
 
         <p class="view-all__blurb">{{ place.blurb }}</p>
 
         <div class="view-all__footer">
-          <span class="view-all__distance">
-            {{ place.distanceKm | number: '1.0-0' }} km away
-          </span>
+          <span class="view-all__distance"> {{ place.distanceKm | number: '1.0-0' }} km away </span>
 
-          <button
-            class="view-all__button"
-            [routerLink]="['/destination', place.id]"
-          >
+          <button class="view-all__button" [routerLink]="['/destination', place.id]">
             Explore
           </button>
         </div>
