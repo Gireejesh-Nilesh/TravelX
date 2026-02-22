@@ -26,22 +26,67 @@ export class AuthModal {
   phone = '';
   password = '';
 
+  /** ✅ NEW: controls when field errors appear */
+  submitted = false;
+
+  focusedField: string | null = null;
+
+  setFocused(field: string) {
+    this.focusedField = field;
+  }
+
+  clearFocused() {
+    this.focusedField = null;
+  }
+
+  /* ---------------- FIELD ERRORS ---------------- */
+
+  get nameError() {
+    if (!this.submitted) return '';
+    if (!this.name?.trim()) return 'Name is required';
+    if (this.name.trim().length < 2) return 'Name is too short';
+    return '';
+  }
+
+  get emailError() {
+    if (!this.submitted) return '';
+    if (!this.email?.trim()) return 'Email is required';
+    if (!this.isValidEmail(this.email)) return 'Invalid email format';
+    return '';
+  }
+
+  get passwordError() {
+    if (!this.submitted) return '';
+    if (!this.password?.trim()) return 'Password is required';
+    if (!this.isStrongPassword(this.password)) {
+      return 'Password needs 8+ chars with upper, lower, and number';
+    }
+    return '';
+  }
+
   constructor(
     private authService: AuthService,
     private router: Router,
   ) {}
 
   submit(): void {
+    /** ✅ IMPORTANT: mark submit attempt */
+    this.submitted = true;
+
     this.formError.set(null);
+
     if (!this.validate()) {
       return;
     }
+
     if (this.mode === 'signin') {
       const ok = this.authService.signIn(this.email, this.password);
+
       if (!ok) {
         this.formError.set('Invalid email or password.');
         return;
       }
+
       this.success.emit();
       this.closed.emit();
       return;
@@ -51,41 +96,59 @@ export class AuthModal {
       { name: this.name, email: this.email, phone: this.phone },
       this.password,
     );
+
     if (!ok) {
       this.formError.set('Email already exists. Try signing in.');
       return;
     }
+
     this.closing.set(true);
+
     window.setTimeout(() => {
       this.success.emit();
-      this.closed.emit();
+
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+
+      this.router.navigateByUrl('/');
     }, 550);
   }
 
   close(): void {
-    this.closed.emit();
-  }
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
 
-  goBack(): void {
-    this.closed.emit();
     this.router.navigateByUrl('/');
   }
 
+  goBack(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+
+    this.router.navigateByUrl('/');
+  }
+
+  /* ---------------- VALIDATION ---------------- */
+
   private validate(): boolean {
     if (this.mode === 'signup' && this.name.trim().length < 2) {
-      this.formError.set('Please enter your name.');
       return false;
     }
+
     if (!this.isValidEmail(this.email)) {
-      this.formError.set('Please enter a valid email address.');
       return false;
     }
+
     if (!this.isStrongPassword(this.password)) {
-      this.formError.set(
-        'Password needs 8+ chars with upper, lower, and number.',
-      );
       return false;
     }
+
     return true;
   }
 
@@ -94,11 +157,6 @@ export class AuthModal {
   }
 
   private isStrongPassword(value: string): boolean {
-    return (
-      value.length >= 8 &&
-      /[A-Z]/.test(value) &&
-      /[a-z]/.test(value) &&
-      /[0-9]/.test(value)
-    );
+    return value.length >= 8 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value);
   }
 }

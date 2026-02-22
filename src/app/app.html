@@ -1,6 +1,6 @@
 <main class="main">
   <div class="main__content" [class.main__content--blur]="authMode">
-    <app-navbar *ngIf="!hideNavbar"></app-navbar>
+    <app-navbar></app-navbar>
     <ng-container *ngIf="isHome; else routed">
       <app-hero></app-hero>
       <app-destinations-section></app-destinations-section>

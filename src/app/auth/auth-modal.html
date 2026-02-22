@@ -3,9 +3,11 @@
     <button class="auth-modal__close" type="button" (click)="close()">×</button>
     <h2>{{ mode === 'signin' ? 'Welcome Back' : 'Create Your Account' }}</h2>
     <p class="auth-modal__subtitle">
-      {{ mode === 'signin'
-        ? 'Sign in to keep planning your next escape.'
-        : 'Join the crew to save trips and unlock activities.' }}
+      {{
+        mode === 'signin'
+          ? 'Sign in to keep planning your next escape.'
+          : 'Join the crew to save trips and unlock activities.'
+      }}
     </p>
 
     <form (ngSubmit)="submit()">
@@ -13,17 +15,47 @@
         <div class="auth-modal__row" *ngIf="mode === 'signup'">
           <div>
             <label>Name</label>
-            <input [(ngModel)]="name" name="name" type="text" required />
+            <input
+              [(ngModel)]="name"
+              name="name"
+              type="text"
+              required
+              (focus)="setFocused('name')"
+              (blur)="clearFocused()"
+            />
+            <p class="field-error" *ngIf="nameError && focusedField !== 'name'">
+              {{ nameError }}
+            </p>
           </div>
           <div>
-            <label>Mobile</label>
+            <label>Mobile(optional)</label>
             <input [(ngModel)]="phone" name="phone" type="tel" />
           </div>
         </div>
         <label>Email</label>
-        <input [(ngModel)]="email" name="email" type="email" required />
+        <input
+          [(ngModel)]="email"
+          name="email"
+          type="email"
+          required
+          (focus)="setFocused('email')"
+          (blur)="clearFocused()"
+        />
+        <p class="field-error" *ngIf="emailError && focusedField !== 'email'">
+          {{ emailError }}
+        </p>
         <label>Password</label>
-        <input [(ngModel)]="password" name="password" type="password" required />
+        <input
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          required
+          (focus)="setFocused('password')"
+          (blur)="clearFocused()"
+        />
+        <p class="field-error" *ngIf="passwordError && focusedField !== 'password'">
+          {{ passwordError }}
+        </p>
       </div>
 
       <p class="auth-modal__error" *ngIf="formError()">{{ formError() }}</p>
@@ -32,9 +64,7 @@
         <button class="auth-modal__submit" type="submit">
           {{ mode === 'signin' ? 'Sign In' : 'Sign Up' }}
         </button>
-        <button class="auth-modal__back" type="button" (click)="goBack()">
-          Go Back
-        </button>
+        <button class="auth-modal__back" type="button" (click)="goBack()">Go Back</button>
       </div>
     </form>
 

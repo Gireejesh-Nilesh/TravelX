@@ -14,6 +14,7 @@ import { DestinationsSection } from './destinations/destinations-section';
 import { filter, Subscription } from 'rxjs';
 import { AuthModal } from './auth/auth-modal';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ import { FormsModule } from '@angular/forms';
     Hero,
     DestinationsSection,
     AuthModal,
+    HttpClientModule,
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.css'],
@@ -55,10 +57,7 @@ export class App implements OnInit, OnDestroy {
         this.hideNavbar = this.isFormRoute(event.url);
         return;
       }
-      if (
-        event instanceof NavigationCancel ||
-        event instanceof NavigationError
-      ) {
+      if (event instanceof NavigationCancel || event instanceof NavigationError) {
         this.isRouting = false;
         this.isHome = this.isHomeRoute(this.router.url);
         return;

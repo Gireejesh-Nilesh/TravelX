@@ -1,79 +1,47 @@
-<section class="book-tour">
-  <div class="book-tour__overlay">
-    <div class="book-tour__panel">
-      <h2>Book a Tour</h2>
-      <p class="book-tour__subtitle">Build your itinerary and secure your spot in minutes.</p>
+<div class="container">
+  <div class="hero">
+    <div class="hero__overlay">
+      <div class="hero__content">
+        <h1>Enjoy your Dream Vacation</h1>
+        <p>Book Hotels, Flights and Stay packages at lowest price</p>
+      </div>
 
-      <form>
-        <!-- DESTINATION -->
-        <label>Tourist place</label>
-        <select [value]="selectedPlaceId()" (change)="onPlaceChange($any($event.target).value)">
-          <option *ngFor="let place of places" [value]="place.id">
-            {{ place.name }}
-          </option>
-          <option value="other">Other</option>
-        </select>
-
-        <input
-          *ngIf="showOtherField()"
-          type="text"
-          placeholder="Enter place name"
-          [value]="otherPlaceName()"
-          (input)="otherPlaceName.set($any($event.target).value)"
-        />
-
-        <!-- DATE OF VISIT (NEW FIELD) -->
-        <label>Date of visit</label>
-        <input
-          type="date"
-          [min]="today"
-          [value]="visitDate()"
-          (change)="visitDate.set($any($event.target).value)"
-        />
-
-        <!-- MEMBERS -->
-        <label>Number of members</label>
-        <input
-          type="number"
-          min="1"
-          [value]="members()"
-          (input)="onMembersChange($any($event.target).value)"
-        />
-
-        <!-- HOTELS (CONVERTED TO DROPDOWN) -->
-        <label>Hotels available</label>
-        <select [value]="selectedHotel()?.name" (change)="onHotelChange($any($event.target).value)">
-          <option *ngFor="let hotel of hotelOptions()" [value]="hotel.name">
-            {{ hotel.name }} – ${{ hotel.basePrice }}
-          </option>
-        </select>
-
-        <!-- TOTAL -->
-        <div class="book-tour__total">
-          <span>Total price</span>
-          <strong>${{ totalPrice }}</strong>
+      <div class="search-bar">
+        <div class="search-item">
+          <div class="label-wrap" (click)="goToDestinations()">
+            <span class="label label--primary">Destiny</span>
+            <span class="label label--secondary">Destiny</span>
+          </div>
+          <!-- <p>Where are you going?</p> -->
+        </div>
+        <div class="search-item">
+          <div class="label-wrap">
+            <span class="label label--primary">Travel</span>
+            <span class="label label--secondary">Travel</span>
+          </div>
+        </div>
+        <div class="search-item">
+          <div class="label-wrap">
+            <span class="label label--primary">Hotel</span>
+            <span class="label label--secondary">Hotel</span>
+          </div>
         </div>
 
-        <!-- ACTIONS -->
-        <div class="book-tour__actions">
-          <button type="button" class="book-tour__back" (click)="goBack()">Go Back</button>
-          <button type="button" [disabled]="!paymentReady()" (click)="startPayment()">
-            Book Now
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- SCRATCH CARD -->
-  <div class="scratch" *ngIf="scratchRevealed()">
-    <div class="scratch__card">
-      <div class="scratch__cover"></div>
-      <div class="scratch__message">
-        <h3>Booking Successful</h3>
-        <p>Your booking has been added to Activities.</p>
-        <button type="button" (click)="closeScratch()">Go to Activities</button>
+        <button class="search-btn" (click)="showToast()">
+          <span><i class="ri-info-i"></i></span>
+        </button>
       </div>
     </div>
   </div>
-</section>
+  <div class="toast-container">
+    <div class="toast" *ngFor="let toast of toasts" [class.toast-hide]="!toast.visible">
+      <span class="toast-text">{{ toast.text }}</span>
+
+      <button class="toast-close" (click)="closeToast(toast.id); $event.stopPropagation()">
+        ×
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-hotel-booking></app-hotel-booking>
