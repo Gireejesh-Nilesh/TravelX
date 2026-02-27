@@ -1,6 +1,17 @@
 <main class="main">
   <div class="main__content" [class.main__content--blur]="authMode">
     <app-navbar></app-navbar>
+    <div class="app-toast-container">
+      <div
+        class="app-toast"
+        *ngFor="let toast of toasts()"
+        [class.app-toast--hide]="!toast.visible"
+        [class.app-toast--error]="toast.kind === 'error'"
+      >
+        <span>{{ toast.text }}</span>
+        <button class="app-toast-close" (click)="closeToast(toast.id)">&times;</button>
+      </div>
+    </div>
     <ng-container *ngIf="isHome; else routed">
       <app-hero></app-hero>
       <app-destinations-section></app-destinations-section>
@@ -14,15 +25,9 @@
         <div class="about__content">
           <p class="about__eyebrow">About Us</p>
           <h2>Designing journeys with heart and precision.</h2>
-          <p>
-            We are a small team that plans trips with local guides we trust.
-          </p>
-          <p>
-            We mix famous sights with quiet spots so each trip feels special.
-          </p>
-          <p>
-            We handle the details so you can relax and enjoy the journey.
-          </p>
+          <p>We are a small team that plans trips with local guides we trust.</p>
+          <p>We mix famous sights with quiet spots so each trip feels special.</p>
+          <p>We handle the details so you can relax and enjoy the journey.</p>
         </div>
       </section>
 
@@ -63,7 +68,9 @@
     </ng-container>
     <ng-template #routed>
       <div class="route-shell" [class.route-shell--loading]="isRouting">
-        <router-outlet />
+        <div class="route-anim">
+          <router-outlet></router-outlet>
+        </div>
       </div>
     </ng-template>
   </div>

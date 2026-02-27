@@ -21,17 +21,25 @@
 
     <script>
       const cursor = document.querySelector('.cursor');
+      const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+      const allowCursorEffect = Boolean(cursor) && !isSmallScreen;
 
-      document.addEventListener('mousemove', (e) => {
-        const { clientX: x, clientY: y } = e;
+      if (!allowCursorEffect && cursor) {
+        cursor.style.display = 'none';
+      }
 
-        /* Move circle */
-        cursor.style.left = x + 'px';
-        cursor.style.top = y + 'px';
+      if (allowCursorEffect) {
+        document.addEventListener('mousemove', (e) => {
+          const { clientX: x, clientY: y } = e;
 
-        /* Create particle */
-        createParticle(x, y);
-      });
+          /* Move circle */
+          cursor.style.left = x + 'px';
+          cursor.style.top = y + 'px';
+
+          /* Create particle */
+          createParticle(x, y);
+        });
+      }
 
       function createParticle(x, y) {
         const particle = document.createElement('div');
@@ -53,20 +61,34 @@
         }, 1000);
       }
 
+      function createScrollParticles(delta) {
+        const burstCount = Math.min(8, Math.max(2, Math.floor(delta / 18)));
+        const x = window.innerWidth - 36;
+        const y = 96;
+
+        for (let i = 0; i < burstCount; i++) {
+          const jitterX = x + (Math.random() - 0.5) * 28;
+          const jitterY = y + Math.random() * 44;
+          createParticle(jitterX, jitterY);
+        }
+      }
+
       let lastScrollY = window.scrollY;
 
-      window.addEventListener('scroll', () => {
-        const currentScrollY = window.scrollY;
+      if (allowCursorEffect) {
+        window.addEventListener('scroll', () => {
+          const currentScrollY = window.scrollY;
 
-        const delta = Math.abs(currentScrollY - lastScrollY);
+          const delta = Math.abs(currentScrollY - lastScrollY);
 
-        /* Spawn only if meaningful scroll */
-        if (delta > 5) {
-          createScrollParticles(delta);
-        }
+          /* Spawn only if meaningful scroll */
+          if (delta > 5) {
+            createScrollParticles(delta);
+          }
 
-        lastScrollY = currentScrollY;
-      });
+          lastScrollY = currentScrollY;
+        });
+      }
     </script>
   </body>
 </html>

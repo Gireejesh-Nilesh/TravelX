@@ -15,6 +15,7 @@ import { filter, Subscription } from 'rxjs';
 import { AuthModal } from './auth/auth-modal';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { UiToastService } from './shared/ui-toast.service';
 
 @Component({
   selector: 'app-root',
@@ -39,10 +40,16 @@ export class App implements OnInit, OnDestroy {
   contactStatus = '';
   isRouting = false;
   hideNavbar = false;
+  readonly toasts;
 
   private navSub?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private uiToast: UiToastService,
+  ) {
+    this.toasts = this.uiToast.toasts;
+  }
 
   ngOnInit(): void {
     this.navSub = this.router.events.subscribe((event) => {
@@ -131,6 +138,10 @@ export class App implements OnInit, OnDestroy {
     window.location.href = `mailto:nileshshakhya@gmail.com?subject=${subject}&body=${body}`;
     this.contactStatus = 'Draft email created. You can send it now.';
     this.contactMessage = '';
+  }
+
+  closeToast(id: number): void {
+    this.uiToast.close(id);
   }
 
   private isFormRoute(url: string): boolean {

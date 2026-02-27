@@ -1,4 +1,29 @@
 <div class="hotel-search">
+  <div class="ad-panel ad-panel--top">
+    <div class="ad-slider">
+      <div class="ad-slide">
+        <img
+          src="https://plus.unsplash.com/premium_photo-1661281267609-809b82192578?q=80&w=1171&auto=format&fit=crop"
+        />
+        <div class="ad-text">Flat 30% Off on Flights</div>
+      </div>
+
+      <div class="ad-slide">
+        <img
+          src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?q=80&w=1170&auto=format&fit=crop"
+        />
+        <div class="ad-text">Save RS.3,000 on Hotels</div>
+      </div>
+
+      <div class="ad-slide">
+        <img
+          src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1676&q=80"
+        />
+        <div class="ad-text">Extra Cashback with Cards</div>
+      </div>
+    </div>
+  </div>
+
   <!-- TOP TABS -->
   <div class="hotel-search__tabs">
     <button class="tab" [class.active]="activeTab === 'flight'" (click)="switchTab('flight')">
@@ -381,7 +406,7 @@
     </div>
 
     <!-- RIGHT: AD PANEL -->
-    <div class="ad-panel">
+    <div class="ad-panel ad-panel--side">
       <div class="ad-slider">
         <div class="ad-slide">
           <img
@@ -399,7 +424,7 @@
 
         <div class="ad-slide">
           <img
-            src="https://images.unsplash.com/photo-1728022873385-1b48bbc41ecc?q=80&w=1676&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1676&q=80"
           />
           <div class="ad-text">Extra Cashback with Cards</div>
         </div>
@@ -411,7 +436,7 @@
     <span>Searching flights...</span>
   </div>
   <!-- RESULTS -->
-  <div #resultsSection class="results" *ngIf="showResults && activeTab === 'flight'">
+  <div #flightResults class="results" *ngIf="showResults && activeTab === 'flight'">
     <h2>{{ filteredFlights.length }} Flights Available</h2>
 
     <div class="flight-card" *ngFor="let flight of filteredFlights">
@@ -442,12 +467,13 @@
 
         <div class="travellers">
           {{ totalTravellers }} Traveller{{ totalTravellers > 1 ? 's' : '' }}
-          <button class="select-btn">Pay ₹{{ flight.price * totalTravellers }}</button>
+          <button class="select-btn" (click)="openBookingForm(flight)">Book Now</button>
         </div>
       </div>
     </div>
   </div>
-  <div #resultsSection class="results" *ngIf="showResults && activeTab === 'bus'">
+
+  <div #busResults class="results" *ngIf="showResults && activeTab === 'bus'">
     <h2>Buses Available</h2>
 
     <div class="flight-card" *ngFor="let bus of filteredBuses">
@@ -472,11 +498,12 @@
 
       <div class="flight-card__right">
         <div class="price">₹{{ bus.price }}</div>
-        <button class="select-btn">Book Now</button>
+        <button class="select-btn" (click)="openBusBooking(bus)">Book Now</button>
       </div>
     </div>
   </div>
-  <div #resultsSection class="results" *ngIf="showResults && activeTab === 'hotel'">
+
+  <div #hotelResults class="results" *ngIf="showResults && activeTab === 'hotel'">
     <h2>Hotels Available</h2>
 
     <div class="flight-card" *ngFor="let hotel of filteredHotels">
@@ -498,11 +525,28 @@
 
       <div class="flight-card__right">
         <div class="price">₹{{ hotel.price }}</div>
-        <button class="select-btn">Reserve</button>
+        <button class="select-btn" (click)="openHotelBooking(hotel)">Reserve</button>
       </div>
     </div>
+  </div>
+
+  <div class="booking-form-wrapper" *ngIf="showBookingForm" #bookingFormRef>
+    <app-flight-booking-form
+      [bookingType]="activeTab"
+      [item]="selectedItem"
+      [travellers]="
+        activeTab === 'flight'
+          ? totalTravellers
+          : activeTab === 'bus'
+            ? busData.passengers
+            : hotelData.guests
+      "
+      (bookingFinished)="handleBookingClosed($event)"
+    >
+    </app-flight-booking-form>
   </div>
   <div class="no-results" *ngIf="noResults">
     No {{ activeTab }} results found for selected criteria.
   </div>
 </div>
+<div class="success-poster" *ngIf="showGlobalPoster">✅ Booking Confirmed</div>

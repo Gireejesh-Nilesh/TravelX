@@ -1,9 +1,10 @@
 .hotel-search {
   padding-inline: 4rem;
-  min-height: 100vh;
+  padding-top: 9rem;
+  min-height: auto;
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   background: linear-gradient(120deg, #0b0f17, #1f2c47);
 }
@@ -268,24 +269,40 @@ select {
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
   position: relative;
+  height: auto;
+  min-height: 0;
+  align-self: stretch;
+  display: flex;
+}
+
+.ad-panel--top {
+  display: none;
+  width: 100%;
+  margin-bottom: 16px;
 }
 
 /* Horizontal slider */
 .ad-slider {
   display: flex;
   animation: slideFluid 12s infinite;
+  height: 100%;
+  flex: 1;
 }
 
 .ad-slide {
   width: 100%;
+  min-width: 100%;
+  height: 100%;
   position: relative;
   flex-shrink: 0;
 }
 
 .ad-slide img {
   width: 100%;
-  height: 110%;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 /* Overlay text */
@@ -320,8 +337,9 @@ select {
   transition: all 0.3s linear;
 }
 
-.flight-card:hover{
-  transform: scale(1.1);
+.flight-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
 }
 
 .airline {
@@ -402,7 +420,7 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 4px;
 }
 
@@ -420,7 +438,7 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 6px;
 }
 
@@ -442,13 +460,13 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .price {
   font-size: 20px;
   font-weight: 700;
-  color: #004eb3;
+  color: #014399;
 }
 
 .travellers {
@@ -509,3 +527,176 @@ select {
     transform: rotate(360deg);
   }
 }
+
+.booking-form-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.success-poster {
+  position: fixed;
+
+  top: 110px; /* navbar safe gap */
+  right: 26px;
+
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-weight: 600;
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+
+  z-index: 999999; /* ⭐ ensure nothing overlays it */
+  pointer-events: none;
+
+  animation:
+    toastIn 0.35s ease,
+    toastOut 4.5s ease forwards;
+}
+
+@keyframes toastIn {
+  from {
+    transform: translateY(-8px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes toastOut {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.booking-form.closing {
+  animation: formClose 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes formClose {
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@media (max-width: 1100px) {
+  .hotel-search {
+    padding-inline: 1.5rem;
+    padding-top: 1.25rem;
+  }
+
+  .booking-layout {
+    width: 100%;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .hotel-search__card {
+    order: 0;
+    width: 420px;
+    max-width: 48%;
+  }
+
+  .ad-panel {
+    order: 1;
+    height: auto;
+    min-height: 0;
+    align-self: stretch;
+  }
+
+  .results {
+    max-width: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .row .outlined-field {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hotel-search {
+    padding-inline: 0.9rem;
+    padding-top: 0.75rem;
+  }
+
+  .booking-layout {
+    flex-direction: column;
+  }
+
+  .hotel-search__card {
+    order: 1;
+    width: 100%;
+    max-width: none;
+  }
+
+  .ad-panel {
+    order: 0;
+    height: 220px;
+  }
+
+  .ad-panel--top {
+    display: block;
+  }
+
+  .ad-panel--side {
+    display: none;
+  }
+
+  .hotel-search__tabs {
+    width: 100%;
+  }
+
+  .trip-types {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .traveller-panel {
+    width: 100%;
+    max-width: calc(100vw - 2.4rem);
+  }
+
+  .flight-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: left;
+  }
+
+  .flight-card__left,
+  .flight-card__middle,
+  .flight-card__right {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .timing {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+

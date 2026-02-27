@@ -1,17 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ViewChild, ElementRef } from '@angular/core';
+import { FlightBookingFormComponent } from '../bookings/flight-booking-form.component';
 
 @Component({
   selector: 'app-hotel-booking',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FlightBookingFormComponent],
   templateUrl: './hotel-booking.html',
   styleUrls: ['./hotel-booking.css'],
 })
 export class HotelBooking {
+  @ViewChild('bookingFormRef') bookingFormRef!: ElementRef;
   @ViewChild('resultsSection') resultsSection!: ElementRef;
+
+  @ViewChild('flightResults') flightResults!: ElementRef;
+  @ViewChild('busResults') busResults!: ElementRef;
+  @ViewChild('hotelResults') hotelResults!: ElementRef;
+
+  @Output() bookingSuccess = new EventEmitter<void>();
   constructor(private http: HttpClient) {}
 
   showTravellers = false;
@@ -139,7 +147,7 @@ export class HotelBooking {
 
     // this.isLoading = true;
 
-    this.http.post<any[]>('http://localhost:3000/flights/search', payload).subscribe({
+    this.http.post<any[]>('/api/flights/search', payload).subscribe({
       next: (data) => {
         if (data?.length) {
           this.filteredFlights = data; // silent replacement
@@ -152,35 +160,70 @@ export class HotelBooking {
   }
 
   searchBuses() {
+    const payload = {
+      from: this.busData.from,
+      to: this.busData.to,
+      departDate: this.busData.departDate,
+      passengers: this.busData.passengers,
+    };
+
     this.filteredBuses = [
       {
         operator: 'Orange Travels',
         busType: 'AC Sleeper',
-        from: this.searchFrom,
-        to: this.searchTo,
+        from: this.busData.from,
+        to: this.busData.to,
         departure: '21:30',
         arrival: '06:15',
         duration: '8h 45m',
         price: 1200,
       },
     ];
-
     this.showResults = true;
+
+    this.http.post<any[]>('/api/buses/search', payload).subscribe({
+      next: (data) => {
+        if (data?.length) {
+          this.filteredBuses = data;
+        }
+      },
+      error: () => {
+        console.log('Using mock buses');
+      },
+    });
   }
 
   searchHotels() {
+    const payload = {
+      city: this.hotelData.city,
+      roomType: this.hotelData.roomType,
+      checkIn: this.hotelData.checkIn,
+      checkOut: this.hotelData.checkOut,
+      guests: this.totalHotelGuests,
+    };
+
     this.filteredHotels = [
       {
         name: 'Hotel Grand Stay',
-        location: this.searchFrom,
+        location: this.hotelData.city,
         roomType: this.hotelData.roomType,
         checkIn: this.hotelData.checkIn,
         checkOut: this.hotelData.checkOut,
         price: 3200,
       },
     ];
-
     this.showResults = true;
+
+    this.http.post<any[]>('/api/hotels/search', payload).subscribe({
+      next: (data) => {
+        if (data?.length) {
+          this.filteredHotels = data;
+        }
+      },
+      error: () => {
+        console.log('Using mock hotels');
+      },
+    });
   }
 
   /* ⭐ SAFE ADDITION – DOES NOT DISTURB ANYTHING */
@@ -214,6 +257,9 @@ export class HotelBooking {
   switchTab(tab: 'flight' | 'bus' | 'hotel') {
     this.activeTab = tab;
     this.showResults = false;
+    this.showBookingForm = false;
+    this.selectedItem = null;
+    this.noResults = false;
     this.errors = {};
 
     if (tab === 'bus') {
@@ -257,6 +303,9 @@ export class HotelBooking {
   searchTo = '';
 
   search() {
+    this.showBookingForm = false; // ⭐ ALWAYS HIDE FORM
+    this.selectedItem = null;
+
     this.noResults = false;
     this.showResults = false;
 
@@ -319,16 +368,19 @@ export class HotelBooking {
 
     /* BUS VALIDATION */
     if (this.activeTab === 'bus') {
-      if (!this.searchFrom?.trim()) this.errors.from = 'From city required';
+      if (!this.busData.from?.trim()) this.errors.from = 'From city required';
 
-      if (!this.searchTo?.trim()) this.errors.to = 'To city required';
+      if (!this.busData.to?.trim()) this.errors.to = 'To city required';
 
       if (!this.busData.departDate) this.errors.departDate = 'Travel date required';
+
+      if (this.tripType === 'round' && !this.busData.returnDate)
+        this.errors.returnDate = 'Return date required';
     }
 
     /* HOTEL VALIDATION */
     if (this.activeTab === 'hotel') {
-      if (!this.searchFrom?.trim()) this.errors.city = 'City required';
+      if (!this.hotelData.city?.trim()) this.errors.city = 'City required';
 
       if (!this.hotelData.checkIn) this.errors.checkIn = 'Check-in required';
 
@@ -338,5 +390,63 @@ export class HotelBooking {
     }
 
     return Object.keys(this.errors).length === 0;
+  }
+
+  selectedItem: any = null;
+  showBookingForm = false;
+
+  openBookingForm(flight: any) {
+    this.selectedItem = flight;
+    this.showBookingForm = true;
+
+    setTimeout(() => {
+      this.bookingFormRef?.nativeElement?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 50);
+  }
+
+  openBusBooking(bus: any) {
+    this.selectedItem = bus;
+    this.showBookingForm = true;
+
+    setTimeout(() => {
+      this.bookingFormRef?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  openHotelBooking(hotel: any) {
+    this.selectedItem = hotel;
+    this.showBookingForm = true;
+
+    setTimeout(() => {
+      this.bookingFormRef?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  scrollToActiveResults() {
+    setTimeout(() => {
+      const el =
+        this.activeTab === 'flight'
+          ? this.flightResults
+          : this.activeTab === 'bus'
+            ? this.busResults
+            : this.hotelResults;
+
+      el?.nativeElement?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 80);
+  }
+  showGlobalPoster = false;
+
+  handleBookingClosed(success?: boolean) {
+    this.showBookingForm = false;
+
+    if (success) {
+      this.bookingSuccess.emit(); // ⭐ SIGNAL UP
+    }
   }
 }

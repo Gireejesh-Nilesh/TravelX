@@ -5,7 +5,9 @@ main {
   color: #feefee;
   position: relative;
   font-family: var(--font-body);
-  transition: background-color 0.6s ease, background 0.6s ease;
+  transition:
+    background-color 0.6s ease,
+    background 0.6s ease;
 
   overflow-x: hidden;
 }
@@ -21,15 +23,17 @@ main {
 
 .route-shell {
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition: opacity 0.35s ease;
   will-change: opacity, transform;
   min-height: 60vh;
 }
 
+.route-anim {
+  animation: route-fade-in 0.32s ease;
+}
+
 .route-shell--loading {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .route-shell ::view-transition-old(root) {
@@ -43,18 +47,16 @@ main {
 @keyframes route-fade-out {
   from {
     opacity: 1;
-    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-6px);
   }
 }
 
 @keyframes route-fade-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -179,4 +181,80 @@ main {
 
 .contact__status {
   color: rgba(255, 255, 255, 0.7);
+}
+
+.app-toast-container {
+  position: fixed;
+  top: 106px;
+  right: 20px;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.app-toast {
+  position: relative;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 12px 38px 12px 16px;
+  border-radius: 14px;
+  background: rgba(20, 30, 50, 0.88);
+  border: 1px solid rgba(0, 255, 26, 0.529);
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  animation: app-toast-enter 0.28s ease-out;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: auto;
+}
+
+.app-toast--error {
+  background: rgba(82, 16, 22, 0.94);
+  border: 1px solid rgba(255, 77, 109, 0.95);
+  color: #ffe8ec;
+}
+
+.app-toast--hide {
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+}
+
+.app-toast-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+@keyframes app-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .app-toast-container {
+    left: 12px;
+    right: 12px;
+    top: 92px;
+  }
+
+  .app-toast {
+    min-width: auto;
+    max-width: none;
+    width: 100%;
+  }
 }

@@ -88,3 +88,10 @@ app-root {
     transform: translate(-50%, -50%) scale(0.2);
   }
 }
+
+@media (max-width: 768px) {
+  .cursor,
+  .particle {
+    display: none !important;
+  }
+}

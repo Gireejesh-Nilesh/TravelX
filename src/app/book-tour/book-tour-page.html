@@ -9,10 +9,9 @@
       <div class="search-bar">
         <div class="search-item">
           <div class="label-wrap" (click)="goToDestinations()">
-            <span class="label label--primary">Destiny</span>
-            <span class="label label--secondary">Destiny</span>
+            <span class="label label--primary">Destination</span>
+            <span class="label label--secondary">Destination</span>
           </div>
-          <!-- <p>Where are you going?</p> -->
         </div>
         <div class="search-item">
           <div class="label-wrap">
@@ -22,8 +21,8 @@
         </div>
         <div class="search-item">
           <div class="label-wrap">
-            <span class="label label--primary">Hotel</span>
-            <span class="label label--secondary">Hotel</span>
+            <span class="label label--primary">Hotels</span>
+            <span class="label label--secondary">Hotels</span>
           </div>
         </div>
 
@@ -33,15 +32,6 @@
       </div>
     </div>
   </div>
-  <div class="toast-container">
-    <div class="toast" *ngFor="let toast of toasts" [class.toast-hide]="!toast.visible">
-      <span class="toast-text">{{ toast.text }}</span>
-
-      <button class="toast-close" (click)="closeToast(toast.id); $event.stopPropagation()">
-        ×
-      </button>
-    </div>
-  </div>
 </div>
 
-<app-hotel-booking></app-hotel-booking>
+<app-hotel-booking (bookingSuccess)="showBookingToast()"></app-hotel-booking>

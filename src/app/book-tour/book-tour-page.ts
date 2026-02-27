@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuoteService } from '../services/quote.service';
 import { Router } from '@angular/router';
 import { HotelBooking } from './hotel-booking/hotel-booking';
+import { UiToastService } from '../shared/ui-toast.service';
 
 @Component({
   selector: 'app-book-tour-page',
@@ -12,61 +12,17 @@ import { HotelBooking } from './hotel-booking/hotel-booking';
   styleUrls: ['./book-tour-page.css'],
 })
 export class BookTourPage {
-  toasts: { id: number; text: string; visible: boolean }[] = [];
-
-  counter = 0;
-  private toastTimer: any;
-
-  // ✅ DEPENDENCY INJECTION
   constructor(
-    private quoteService: QuoteService,
     private router: Router,
+    private uiToast: UiToastService,
   ) {}
 
   showToast() {
-    this.quoteService.getQuote().subscribe((q: any) => {
-      const newToast = {
-        id: ++this.counter,
-        text: q.quote,
-        visible: true,
-      };
-
-      /* ⭐ Clear any running timers FIRST */
-      clearTimeout(this.toastTimer);
-      if (this.toasts.length && this.toasts[0].text === q.quote) {
-        return; // skip duplicate
-      }
-
-      /* ⭐ If toast exists → fade out & replace */
-      if (this.toasts.length) {
-        this.toasts[0].visible = false;
-
-        setTimeout(() => {
-          this.toasts = [newToast];
-        }, 250);
-      } else {
-        this.toasts = [newToast];
-      }
-
-      /* ⭐ Auto dismiss */
-      this.toastTimer = setTimeout(() => {
-        if (this.toasts.length) {
-          this.toasts[0].visible = false;
-
-          setTimeout(() => {
-            this.toasts = [];
-          }, 250);
-        }
-      }, 4000);
-    });
+    this.uiToast.show('Explore top deals for your next journey.', 3000);
   }
 
-  closeToast(id: number) {
-    this.toasts = this.toasts.map((t) => (t.id === id ? { ...t, visible: false } : t));
-
-    setTimeout(() => {
-      this.toasts = this.toasts.filter((t) => t.id !== id);
-    }, 250);
+  showBookingToast() {
+    this.uiToast.show('✅ Booking Confirmed', 4000);
   }
 
   goToDestinations() {
