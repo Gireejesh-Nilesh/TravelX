@@ -1,18 +1,28 @@
 <div class="auth-modal">
   <div class="auth-modal__panel" [class.auth-modal__panel--closing]="closing()">
-    <button class="auth-modal__close" type="button" (click)="close()">×</button>
-    <h2>{{ mode === 'signin' ? 'Welcome Back' : 'Create Your Account' }}</h2>
+    <button class="auth-modal__close" type="button" (click)="close()">&times;</button>
+    <h2>
+      {{
+        isForgotPassword
+          ? 'Reset Password'
+          : mode === 'signin'
+            ? 'Welcome Back'
+            : 'Create Your Account'
+      }}
+    </h2>
     <p class="auth-modal__subtitle">
       {{
-        mode === 'signin'
-          ? 'Sign in to keep planning your next escape.'
-          : 'Join the crew to save trips and unlock activities.'
+        isForgotPassword
+          ? 'Set a new password and sign back in.'
+          : mode === 'signin'
+            ? 'Sign in to keep planning your next escape.'
+            : 'Join the crew to save trips and unlock exclusive tours.'
       }}
     </p>
 
     <form (ngSubmit)="submit()">
       <div class="auth-modal__fields">
-        <div class="auth-modal__row" *ngIf="mode === 'signup'">
+        <div class="auth-modal__row" *ngIf="mode === 'signup' && !isForgotPassword">
           <div>
             <label>Name</label>
             <input
@@ -29,7 +39,16 @@
           </div>
           <div>
             <label>Mobile(optional)</label>
-            <input [(ngModel)]="phone" name="phone" type="tel" />
+            <input
+              [(ngModel)]="phone"
+              name="phone"
+              type="tel"
+              (focus)="setFocused('phone')"
+              (blur)="clearFocused()"
+            />
+            <p class="field-error" *ngIf="phoneError && focusedField !== 'phone'">
+              {{ phoneError }}
+            </p>
           </div>
         </div>
         <label>Email</label>
@@ -44,7 +63,7 @@
         <p class="field-error" *ngIf="emailError && focusedField !== 'email'">
           {{ emailError }}
         </p>
-        <label>Password</label>
+        <label>{{ isForgotPassword ? 'New Password' : 'Password' }}</label>
         <input
           [(ngModel)]="password"
           name="password"
@@ -56,15 +75,75 @@
         <p class="field-error" *ngIf="passwordError && focusedField !== 'password'">
           {{ passwordError }}
         </p>
+
+        <ng-container *ngIf="isForgotPassword">
+          <label>Confirm Password</label>
+          <input
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+            (focus)="setFocused('confirmPassword')"
+            (blur)="clearFocused()"
+          />
+          <p class="field-error" *ngIf="confirmPasswordError && focusedField !== 'confirmPassword'">
+            {{ confirmPasswordError }}
+          </p>
+        </ng-container>
       </div>
 
       <p class="auth-modal__error" *ngIf="formError()">{{ formError() }}</p>
 
       <div class="auth-modal__actions">
         <button class="auth-modal__submit" type="submit">
-          {{ mode === 'signin' ? 'Sign In' : 'Sign Up' }}
+          {{
+            isForgotPassword
+              ? 'Reset Password'
+              : mode === 'signin'
+                ? 'Sign In'
+                : 'Sign Up'
+          }}
         </button>
-        <button class="auth-modal__back" type="button" (click)="goBack()">Go Back</button>
+      </div>
+
+      <div class="auth-modal__links" *ngIf="mode === 'signin'">
+        <button
+          class="auth-modal__link-btn"
+          type="button"
+          *ngIf="!isForgotPassword"
+          (click)="openForgotPassword()"
+        >
+          Forgot password?
+        </button>
+        <button
+          class="auth-modal__link-btn"
+          type="button"
+          *ngIf="isForgotPassword"
+          (click)="cancelForgotPassword()"
+        >
+          Back to sign in
+        </button>
+      </div>
+
+      <div class="auth-modal__switch" *ngIf="!isForgotPassword">
+        <span *ngIf="mode === 'signin'">Not registered?</span>
+        <span *ngIf="mode === 'signup'">Already registered?</span>
+        <button
+          class="auth-modal__link-btn"
+          type="button"
+          *ngIf="mode === 'signin'"
+          (click)="switchMode('signup')"
+        >
+          Register
+        </button>
+        <button
+          class="auth-modal__link-btn"
+          type="button"
+          *ngIf="mode === 'signup'"
+          (click)="switchMode('signin')"
+        >
+          Login
+        </button>
       </div>
     </form>
 

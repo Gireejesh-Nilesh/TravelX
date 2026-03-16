@@ -25,37 +25,49 @@ export class AuthModal {
   email = '';
   phone = '';
   password = '';
+  confirmPassword = '';
+  isForgotPassword = false;
 
-  /** ✅ NEW: controls when field errors appear */
+  // Controls when field errors appear.
   submitted = false;
-
   focusedField: string | null = null;
 
-  setFocused(field: string) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  setFocused(field: string): void {
     this.focusedField = field;
   }
 
-  clearFocused() {
+  clearFocused(): void {
     this.focusedField = null;
   }
 
-  /* ---------------- FIELD ERRORS ---------------- */
-
-  get nameError() {
-    if (!this.submitted) return '';
+  get nameError(): string {
+    if (!this.submitted || this.mode !== 'signup') return '';
     if (!this.name?.trim()) return 'Name is required';
     if (this.name.trim().length < 2) return 'Name is too short';
     return '';
   }
 
-  get emailError() {
+  get emailError(): string {
     if (!this.submitted) return '';
     if (!this.email?.trim()) return 'Email is required';
     if (!this.isValidEmail(this.email)) return 'Invalid email format';
     return '';
   }
 
-  get passwordError() {
+  get phoneError(): string {
+    if (this.mode !== 'signup' || !this.submitted) return '';
+    if (this.phone?.trim() && !this.isValidPhone(this.phone)) {
+      return 'Phone must be 10 to 15 digits';
+    }
+    return '';
+  }
+
+  get passwordError(): string {
     if (!this.submitted) return '';
     if (!this.password?.trim()) return 'Password is required';
     if (!this.isStrongPassword(this.password)) {
@@ -64,24 +76,41 @@ export class AuthModal {
     return '';
   }
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  get confirmPasswordError(): string {
+    if (!this.submitted || !this.isForgotPassword) return '';
+    if (!this.confirmPassword?.trim()) return 'Confirm password is required';
+    if (this.confirmPassword !== this.password) return 'Passwords do not match';
+    return '';
+  }
 
-  submit(): void {
-    /** ✅ IMPORTANT: mark submit attempt */
+  async submit(): Promise<void> {
+    // Mark submit attempt so field-level errors can be shown.
     this.submitted = true;
-
     this.formError.set(null);
+
+    if (this.isForgotPassword) {
+      if (!this.validateForgotPassword()) {
+        return;
+      }
+      const resetOk = await this.authService.resetPassword(this.email, this.password);
+      if (!resetOk) {
+        this.formError.set('No account found for this email. Please sign up.');
+        return;
+      }
+      this.isForgotPassword = false;
+      this.submitted = false;
+      this.confirmPassword = '';
+      this.formError.set('Password reset successful. Please sign in.');
+      this.router.navigateByUrl('/signin');
+      return;
+    }
 
     if (!this.validate()) {
       return;
     }
 
     if (this.mode === 'signin') {
-      const ok = this.authService.signIn(this.email, this.password);
-
+      const ok = await this.authService.signIn(this.email, this.password);
       if (!ok) {
         this.formError.set('Invalid email or password.');
         return;
@@ -92,26 +121,22 @@ export class AuthModal {
       return;
     }
 
-    const ok = this.authService.signUp(
-      { name: this.name, email: this.email, phone: this.phone },
+    const ok = await this.authService.signUp(
+      { name: this.name.trim(), email: this.email.trim(), phone: this.phone.trim() || undefined },
       this.password,
     );
-
     if (!ok) {
       this.formError.set('Email already exists. Try signing in.');
       return;
     }
 
     this.closing.set(true);
-
     window.setTimeout(() => {
       this.success.emit();
-
       if (window.history.length > 1) {
         window.history.back();
         return;
       }
-
       this.router.navigateByUrl('/');
     }, 550);
   }
@@ -121,23 +146,40 @@ export class AuthModal {
       window.history.back();
       return;
     }
-
     this.router.navigateByUrl('/');
   }
 
-  goBack(): void {
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
-
-    this.router.navigateByUrl('/');
+  openForgotPassword(): void {
+    this.isForgotPassword = true;
+    this.submitted = false;
+    this.formError.set(null);
+    this.password = '';
+    this.confirmPassword = '';
   }
 
-  /* ---------------- VALIDATION ---------------- */
+  cancelForgotPassword(): void {
+    this.isForgotPassword = false;
+    this.submitted = false;
+    this.formError.set(null);
+    this.password = '';
+    this.confirmPassword = '';
+  }
+
+  switchMode(nextMode: AuthMode): void {
+    this.isForgotPassword = false;
+    this.submitted = false;
+    this.formError.set(null);
+    this.password = '';
+    this.confirmPassword = '';
+    this.router.navigateByUrl(`/${nextMode}`);
+  }
 
   private validate(): boolean {
     if (this.mode === 'signup' && this.name.trim().length < 2) {
+      return false;
+    }
+
+    if (this.mode === 'signup' && this.phone.trim() && !this.isValidPhone(this.phone)) {
       return false;
     }
 
@@ -152,11 +194,31 @@ export class AuthModal {
     return true;
   }
 
+  private validateForgotPassword(): boolean {
+    if (!this.isValidEmail(this.email)) {
+      return false;
+    }
+    if (!this.isStrongPassword(this.password)) {
+      return false;
+    }
+    if (!this.confirmPassword?.trim()) {
+      return false;
+    }
+    if (this.confirmPassword !== this.password) {
+      return false;
+    }
+    return true;
+  }
+
   private isValidEmail(value: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
   }
 
   private isStrongPassword(value: string): boolean {
     return value.length >= 8 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value);
+  }
+
+  private isValidPhone(value: string): boolean {
+    return /^\+?[0-9]{10,15}$/.test(value.trim());
   }
 }

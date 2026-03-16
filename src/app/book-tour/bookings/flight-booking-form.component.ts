@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { finalize, take } from 'rxjs/operators';
-import { BookingRequestService, BookingTestMode } from '../../shared/booking-request.service';
+import { BookingRequestService } from '../../shared/booking-request.service';
 import { Subscription } from 'rxjs';
 import { UiToastService } from '../../shared/ui-toast.service';
+import { Booking, BookingService } from '../../shared/booking.service';
 
 @Component({
   selector: 'app-flight-booking-form',
@@ -27,12 +28,12 @@ export class FlightBookingFormComponent implements OnChanges {
   travellerErrors: any[] = [];
   isClosing = false;
   isSubmitting = false;
-  statusTestMode: BookingTestMode = 'success';
   private submitSub?: Subscription;
 
   constructor(
     private bookingRequestService: BookingRequestService,
     private uiToast: UiToastService,
+    private bookingService: BookingService,
   ) {}
 
   ngOnChanges() {
@@ -60,7 +61,7 @@ export class FlightBookingFormComponent implements OnChanges {
     };
 
     this.submitSub = this.bookingRequestService
-      .submitBooking(payload, this.statusTestMode)
+      .submitBooking(payload)
       .pipe(
         take(1),
         finalize(() => {
@@ -76,6 +77,7 @@ export class FlightBookingFormComponent implements OnChanges {
             return;
           }
 
+          this.persistBookingForAnalytics();
           this.showConfirmation = false;
           this.uiToast.show('Booking confirmed successfully.', 3000);
           this.isClosing = true;
@@ -148,5 +150,58 @@ export class FlightBookingFormComponent implements OnChanges {
     if (status === 500) return 'Server error occurred. Please try again in a moment.';
     if (status === 0) return 'Network issue detected. Check connection and retry.';
     return 'Booking could not be completed. Please try again.';
+  }
+
+  private persistBookingForAnalytics(): void {
+    const now = new Date();
+    const sourceDate = this.item?.departDate || this.item?.checkIn || now.toISOString();
+    const visitDate = this.normalizeDateValue(sourceDate, now);
+    const visitTime = new Date(visitDate).getTime();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
+    const destination = this.pickDestinationName();
+    const provider = this.pickProviderName();
+    const normalizedPlaceId = destination.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+    const booking: Booking = {
+      placeId: normalizedPlaceId || `place-${Date.now()}`,
+      placeName: destination,
+      hotel: provider,
+      members: Math.max(1, Number(this.travellers) || 1),
+      price: Math.max(0, Number(this.totalAmount) || 0),
+      visitDate,
+      status: visitTime >= todayStart ? 'visiting-soon' : 'booked',
+      createdAt: now.toISOString(),
+    };
+
+    this.bookingService.saveBooking(booking);
+  }
+
+  private pickDestinationName(): string {
+    if (this.bookingType === 'flight') {
+      return this.item?.to || this.item?.destination || this.item?.routeTo || 'Flight Destination';
+    }
+    if (this.bookingType === 'bus') {
+      return this.item?.to || this.item?.destination || 'Bus Destination';
+    }
+    return this.item?.location || this.item?.city || this.item?.name || this.item?.hotelName || 'Hotel Stay';
+  }
+
+  private pickProviderName(): string {
+    if (this.bookingType === 'flight') {
+      return this.item?.airline || this.item?.operator || 'Flight Provider';
+    }
+    if (this.bookingType === 'bus') {
+      return this.item?.operator || 'Bus Provider';
+    }
+    return this.item?.name || this.item?.hotelName || 'Hotel Provider';
+  }
+
+  private normalizeDateValue(value: string, fallback: Date): string {
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      return fallback.toISOString();
+    }
+    return parsed.toISOString();
   }
 }

@@ -96,7 +96,7 @@
 .label-wrap {
   position: relative;
   height: 1.8rem;
-  width: 30%;
+  width: 100%;
   overflow: hidden;
   cursor: pointer;
 }

@@ -99,17 +99,6 @@
         <span>Rs {{ totalAmount }}</span>
       </div>
 
-      <div class="preview-row">
-        <strong>Test Status:</strong>
-        <select [(ngModel)]="statusTestMode" [disabled]="isSubmitting">
-          <option value="success">200 Success</option>
-          <option value="bad-request">400 Bad Request</option>
-          <option value="not-found">404 Not Found</option>
-          <option value="conflict">409 Conflict</option>
-          <option value="server-error">500 Server Error</option>
-        </select>
-      </div>
-
       <div class="popup-actions">
         <button class="confirm-btn" (click)="confirmBooking()" [disabled]="isSubmitting">
           {{ isSubmitting ? 'Submitting...' : 'Confirm' }}

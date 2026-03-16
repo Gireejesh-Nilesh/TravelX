@@ -125,7 +125,7 @@ export class App implements OnInit, OnDestroy {
       this.router.navigateByUrl(returnUrl);
       return;
     }
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/profiles');
   }
 
   submitContact(): void {

@@ -90,6 +90,11 @@ export class Navbar implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
+  get userInitial(): string {
+    const source = this.user?.name?.trim() || this.user?.email?.trim() || 'U';
+    return source.charAt(0).toUpperCase();
+  }
+
   snapToActive(): void {
     if (!this.linksWrap?.nativeElement) {
       return;
@@ -236,6 +241,12 @@ export class Navbar implements AfterViewInit, OnDestroy, OnInit {
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  signOut(): void {
+    this.authService.signOut();
+    this.isMenuOpen = false;
+    this.router.navigateByUrl('/');
   }
 
   openMenu(): void {

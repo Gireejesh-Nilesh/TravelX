@@ -75,9 +75,7 @@
 }
 
 .auth-modal__actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
+  display: block;
   margin-top: 1.4rem;
 }
 
@@ -92,21 +90,25 @@
   cursor: pointer;
 }
 
-.auth-modal__back {
-  width: 100%;
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: transparent;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 600;
-  cursor: pointer;
+.auth-modal__links,
+.auth-modal__switch {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
 }
 
-@media (max-width: 520px) {
-  .auth-modal__actions {
-    grid-template-columns: 1fr;
-  }
+.auth-modal__link-btn {
+  border: none;
+  background: transparent;
+  color: #9ec5ff;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
 }
 
 .auth-modal__error {

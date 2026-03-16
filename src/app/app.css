@@ -185,7 +185,7 @@ main {
 
 .app-toast-container {
   position: fixed;
-  top: 106px;
+  top: 16px;
   right: 20px;
   z-index: 2147483647;
   display: flex;
@@ -249,7 +249,7 @@ main {
   .app-toast-container {
     left: 12px;
     right: 12px;
-    top: 92px;
+    top: 12px;
   }
 
   .app-toast {

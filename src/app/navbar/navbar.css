@@ -104,6 +104,7 @@
 .buttons {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
 .btn {
@@ -139,6 +140,30 @@
   border: 1px solid rgba(106, 169, 255, 0.4);
   color: #cfe2ff;
   font-weight: 600;
+  text-decoration: none;
+}
+
+.user-pill__icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #eaf2ff;
+  border: 1px solid rgba(106, 169, 255, 0.7);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(14, 116, 144, 0.85));
+}
+
+.user-pill__logout {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #eef2ff;
+  padding: 0.45rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* ================= COMPACT MODE ================= */
@@ -232,8 +257,30 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
   font-weight: 600;
   color: #cfe2ff;
+}
+
+.nav-profile__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(106, 169, 255, 0.7);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(14, 116, 144, 0.85));
+}
+
+.nav-logout {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #eef2ff;
+  padding: 0.45rem 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 /* ================= HOVER BEHAVIOR ================= */

@@ -1,13 +1,21 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Routes, Router } from '@angular/router';
 import { AuthService } from './shared/auth.service';
-import { DestinationsViewAllComponent } from './destinations/destinations-view-all';
+import { UiToastService } from './shared/ui-toast.service';
+
+const shouldShowLoginToast = (url: string): boolean => {
+  return url.startsWith('/destinations/all') || url.startsWith('/book-tour');
+};
 
 const requireAuth: CanActivateFn = (_route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
+  const uiToast = inject(UiToastService);
   if (authService.user) {
     return true;
+  }
+  if (shouldShowLoginToast(state.url)) {
+    uiToast.show('Please login to move ahead');
   }
   sessionStorage.setItem('auth_return', state.url);
   return router.createUrlTree(['/signin']);
@@ -28,6 +36,7 @@ export const routes: Routes = [
     path: 'destinations/all',
     loadComponent: () =>
       import('./destinations/destinations-view-all').then((m) => m.DestinationsViewAllComponent),
+    canActivate: [requireAuth],
   },
   {
     path: 'destination/:id',
@@ -35,17 +44,14 @@ export const routes: Routes = [
       import('./destinations/destination-detail').then((m) => m.DestinationDetail),
   },
   {
-    path: 'activities',
-    loadComponent: () => import('./activities/activities-page').then((m) => m.ActivitiesPage),
-    canActivate: [requireAuth],
-  },
-  {
     path: 'book-tour',
     loadComponent: () => import('./book-tour/book-tour-page').then((m) => m.BookTourPage),
+    canActivate: [requireAuth],
   },
   {
     path: 'book-tour/:id',
     loadComponent: () => import('./book-tour/book-tour-page').then((m) => m.BookTourPage),
+    canActivate: [requireAuth],
   },
 
   {
@@ -55,6 +61,16 @@ export const routes: Routes = [
   {
     path: 'signup',
     loadComponent: () => import('./app-empty-route').then((m) => m.AppEmptyRoute),
+  },
+  {
+    path: 'profiles',
+    loadComponent: () => import('./profile/profile-page').then((m) => m.ProfilePage),
+    canActivate: [requireAuth],
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./profile/profile-page').then((m) => m.ProfilePage),
+    canActivate: [requireAuth],
   },
 
   {

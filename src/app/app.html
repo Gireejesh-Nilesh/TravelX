@@ -1,17 +1,6 @@
 <main class="main">
   <div class="main__content" [class.main__content--blur]="authMode">
     <app-navbar></app-navbar>
-    <div class="app-toast-container">
-      <div
-        class="app-toast"
-        *ngFor="let toast of toasts()"
-        [class.app-toast--hide]="!toast.visible"
-        [class.app-toast--error]="toast.kind === 'error'"
-      >
-        <span>{{ toast.text }}</span>
-        <button class="app-toast-close" (click)="closeToast(toast.id)">&times;</button>
-      </div>
-    </div>
     <ng-container *ngIf="isHome; else routed">
       <app-hero></app-hero>
       <app-destinations-section></app-destinations-section>
@@ -74,6 +63,17 @@
       </div>
     </ng-template>
   </div>
+  <div class="app-toast-container">
+    <div
+      class="app-toast"
+      *ngFor="let toast of toasts()"
+      [class.app-toast--hide]="!toast.visible"
+      [class.app-toast--error]="toast.kind === 'error'"
+    >
+      <span>{{ toast.text }}</span>
+      <button class="app-toast-close" (click)="closeToast(toast.id)">&times;</button>
+    </div>
+  </div>
 
   <app-auth-modal
     *ngIf="authMode"
@@ -82,3 +82,5 @@
     (success)="onAuthSuccess()"
   ></app-auth-modal>
 </main>
+
+  
